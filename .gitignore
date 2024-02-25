@@ -53,3 +53,9 @@ dkms.conf
 
 #XCode
 *.xcodeproj
+
+#PDF LABS
+*.pdf
+
+#MacOS
+.DS_Store
