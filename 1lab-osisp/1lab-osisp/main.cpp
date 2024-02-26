@@ -6,10 +6,10 @@
 
 struct flags
 {
-    bool l = false;
-    bool d = false;
-    bool f = false;
-    bool s = false;
+    int l = 0;
+    int d = 0;
+    int f = 0;
+    int s = 0;
 };
 
 flags find_flags_and_path(int argc, char* argv[], char* path)
@@ -22,19 +22,19 @@ flags find_flags_and_path(int argc, char* argv[], char* path)
             
             for(size_t i = 0; i < strlen(argv[j]); i++)
             {
-                if(argv[j][i] == 'l') flag.l = true;
-                if(argv[j][i] == 'd') flag.d = true;
-                if(argv[j][i] == 'f') flag.f = true;
-                if(argv[j][i] == 's') flag.s = true;
+                if(argv[j][i] == 'l') flag.l = 1;
+                if(argv[j][i] == 'd') flag.d = 1;
+                if(argv[j][i] == 'f') flag.f = 1;
+                if(argv[j][i] == 's') flag.s = 1;
             }
         }
         if(argv[j][0] == '/' || argv[j][0] == '.') strcpy(path, argv[j]);
     }
     if(!flag.l && !flag.d && !flag.f)
     {
-        flag.l = true;
-        flag.d = true;
-        flag.f = true;
+        flag.l = 1;
+        flag.d = 1;
+        flag.f = 1;
     }
     return flag;
 }
@@ -56,10 +56,11 @@ int main(int argc, char* argv[])
     
     for (int i = 0; i < n; i++)
     {
-        if(flag.d && file_list[i]->d_type == DT_DIR) printf("%s\n",file_list[i]->d_name);
-        if(flag.f && file_list[i]->d_type == DT_REG) printf("%s\n",file_list[i]->d_name);
-        if(flag.l && file_list[i]->d_type == DT_LNK) printf("%s\n", file_list[i]->d_name);
+        if(flag.d && file_list[i]->d_type == DT_DIR) printf("%s/%s\n", path, file_list[i]->d_name);
+        if(flag.f && file_list[i]->d_type == DT_REG) printf("%s/%s\n", path, file_list[i]->d_name);
+        if(flag.l && file_list[i]->d_type == DT_LNK) printf("%s/%s\n", path, file_list[i]->d_name);
     }
     if(n == -1) printf("Try again!\n");
+    
     return 0;
 }
