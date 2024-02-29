@@ -6,16 +6,16 @@
 
 struct flags
 {
-    int l = 0;
-    int d = 0;
-    int f = 0;
-    int s = 0;
+    int l;
+    int d;
+    int f;
+    int s;
 };
 
-flags find_flags_and_path(int argc, char* argv[], char* path)
+struct flags find_flags_and_path(int argc, char* argv[], char* path)
 {
-    flags flag;
-    for(int j = 1; j<argc; j++)
+    struct flags flag = { 0, 0, 0, 0 };
+    for(int j = 1; j < argc; j++)
     {
         if(argv[j][0] == '-')
         {
@@ -46,7 +46,7 @@ int compare(const struct dirent **a, const struct dirent **b) {
 int main(int argc, char* argv[])
 {
     char path[256] = "./";
-    flags flag = find_flags_and_path(argc, argv, path);
+    struct flags flag = find_flags_and_path(argc, argv, path);
     
     struct dirent** file_list;
     
