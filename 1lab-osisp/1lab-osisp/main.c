@@ -33,7 +33,6 @@ struct flags find_flags_and_path(int argc, char* argv[], char* path, char* name)
         if(argv[j][0] == '/' || argv[j][0] == '.') strcpy(path, argv[j]);
         if (argv[j][0] == '%' && argv[j][strlen(argv[j]) - 1] == '%') {
             strcpy(name, argv[j]);
-           // printf("1\n");
         }
     }
     if(!flag.l && !flag.d && !flag.f)
