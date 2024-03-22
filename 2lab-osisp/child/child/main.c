@@ -4,7 +4,7 @@
 #include <unistd.h>
 extern char **environ;
 
-int main(int argc, char *argv[], char *envp[]) {
+int main(int argc, char * argv[], char * envp[]) {
     
     pid_t pid = getpid();
     pid_t ppid = getppid();
@@ -41,7 +41,7 @@ int main(int argc, char *argv[], char *envp[]) {
             }
         }
         
-        if (strcmp(argv[2], "&") == 0) {
+        if (strcmp(argv[2], "%") == 0) {
             for (int i = 0; envp[i] != NULL; i++) {
                 
                 char *name = malloc(256);
