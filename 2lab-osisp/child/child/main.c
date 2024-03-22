@@ -9,7 +9,7 @@ int main(int argc, char * argv[], char * envp[]) {
     pid_t pid = getpid();
     pid_t ppid = getppid();
     
-    printf("Имя процесса: child\n");
+    printf("Process name: child\n");
     printf("PID: %d\n", pid);
     printf("PPID: %d\n", ppid);
     
@@ -42,6 +42,7 @@ int main(int argc, char * argv[], char * envp[]) {
         }
         
         if (strcmp(argv[2], "%") == 0) {
+            int count = 0;
             for (int i = 0; envp[i] != NULL; i++) {
                 
                 char *name = malloc(256);
@@ -50,13 +51,19 @@ int main(int argc, char * argv[], char * envp[]) {
                 *new_name = '\0';
                 
                 if (strcmp(line, name) == 0) {
+                    count++;
                     printf("%s\n", envp[i]);
                 }
                 free(name);
             }
+            if(!count) {
+                printf("%s - not found\n", line);
+            }
         }
         
         if (strcmp(argv[2], "@") == 0) {
+            
+            int count = 0;
             for (char **env = environ; *env != NULL; env++) {
                 
                 char *name = malloc(256);
@@ -65,10 +72,14 @@ int main(int argc, char * argv[], char * envp[]) {
                 *new_name = '\0';
                 
                 if (strcmp(line, name) == 0) {
+                    count++;
                     printf("%s\n", *env);
                 }
                 
                 free(name);
+            }
+            if (!count) {
+                printf("%s - not found\n", line);
             }
         }
         

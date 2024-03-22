@@ -14,6 +14,19 @@ int compare_env_vars(const void *a, const void *b) {
     return strcoll(var_one, var_two);
 }
 
+void child_process(const char *file_name, const char *symbol, const char *child_path, char *envp[]) {
+    pid_t pid = fork();
+    if(pid < 0) {
+        perror("fork");
+        exit(1);
+    }
+    
+    if (pid == 0) {
+        const char *argv[] = {child_path, file_name, symbol, NULL};
+        execve(child_path, (char* const*)argv, envp);
+    }
+}
+
 int main(int argc, char * argv[], char * envp[]) {
     setlocale(LC_COLLATE, "C");
     
@@ -25,6 +38,7 @@ int main(int argc, char * argv[], char * envp[]) {
         env_count++;
     }
     qsort(env_vars, env_count, sizeof(char *), compare_env_vars);
+    
     for (int i = 0; i < env_count; i++) {
         printf("%s\n", env_vars[i]);
     }
@@ -34,12 +48,7 @@ int main(int argc, char * argv[], char * envp[]) {
         
         if(c == '+') {
             char *value = getenv(CHILD_PATH);
-            if (value != NULL) {
-                printf("%s=%s\n", CHILD_PATH, value);
-            } else {
-                printf("%s - add value\n", CHILD_PATH);
-            }
-            
+            child_process(argv[1], "+", value, envp);
         }
         
         if(c == '%') {
@@ -49,9 +58,10 @@ int main(int argc, char * argv[], char * envp[]) {
                 strcpy(name, envp[i]);
                 char *new_name = strchr(name, '=');
                 *new_name = '\0';
+                new_name++;
                 
                 if (strcmp(CHILD_PATH, name) == 0) {
-                    printf("%s\n", envp[i]);
+                    child_process(argv[1], "%", new_name, envp);
                 }
                 free(name);
             }
@@ -64,9 +74,9 @@ int main(int argc, char * argv[], char * envp[]) {
                 strcpy(name, *env);
                 char *new_name = strchr(name, '=');
                 *new_name = '\0';
-                
+                new_name++;
                 if (strcmp(CHILD_PATH, name) == 0) {
-                    printf("%s\n", *env);
+                    child_process(argv[1], "@", new_name, envp);
                 }
                 
                 free(name);
