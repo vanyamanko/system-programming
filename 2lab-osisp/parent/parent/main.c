@@ -20,11 +20,16 @@ void child_process(const char *file_name, const char *symbol, const char *child_
         perror("fork");
         exit(1);
     }
-    
+    static int count = 0;
     if (pid == 0) {
-        const char *argv[] = {child_path, file_name, symbol, NULL};
+        char child_name[sizeof("child_xx")];
+        snprintf(child_name, sizeof(child_name), "child_%02d", count);
+        const char *argv[] = {child_name, file_name, symbol, NULL};
+        count++;
+        
         execve(child_path, (char* const*)argv, envp);
     }
+    count++;
 }
 
 int main(int argc, char * argv[], char * envp[]) {

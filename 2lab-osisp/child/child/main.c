@@ -9,7 +9,7 @@ int main(int argc, char * argv[], char * envp[]) {
     pid_t pid = getpid();
     pid_t ppid = getppid();
     
-    printf("Process name: child\n");
+    printf("Process name: %s\n", argv[0]);
     printf("PID: %d\n", pid);
     printf("PPID: %d\n", ppid);
     
