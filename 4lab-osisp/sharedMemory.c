@@ -23,4 +23,14 @@ void cleanupSharedMemory(MessageQueue *queue) {
         perror("shmdt");
         exit(EXIT_FAILURE);
     }
+    int shm_id = shmget(SHARED_MEMORY_KEY, sizeof(MessageQueue), 0666);
+    if (shm_id == -1) {
+        perror("shmget");
+        exit(EXIT_FAILURE);
+    }
+
+    if (shmctl(shm_id, IPC_RMID, NULL) == -1) {
+        perror("shmctl");
+        exit(EXIT_FAILURE);
+    }
 }
