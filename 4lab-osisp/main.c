@@ -30,6 +30,7 @@ int main(void) {
             for (int i = 0; i < producerCount; i++) {
                 kill(arrProducer[i], SIGTERM); 
             } 
+            producerCount = 0;
         }
         if(c == '3') {
 
@@ -50,6 +51,7 @@ int main(void) {
            for (int i = 0; i < consumerCount; i++) {
                 kill(arrConsumer[i], SIGTERM); 
             }  
+            consumerCount = 0;
         }
         if(c == 's') {
             printf("Count of producter process: %d\n", producerCount);
