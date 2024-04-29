@@ -12,8 +12,7 @@
 #include <dispatch/dispatch.h>
 #include <signal.h> 
 
-#define MAX_QUEUE_SIZE 5 
-#define SHARED_MEMORY_KEY 8888
+#define MAX_QUEUE_SIZE 15
 #define MAX_SEM_COUNT 10
 
 typedef struct {
@@ -43,10 +42,12 @@ void generateRandomMessage(Message* message);
 
 uint16_t hashCode(const Message *message);
 
-MessageQueue *initSharedMemory(void);
+MessageQueue *initSharedMemoryQueue(void);
 
-void cleanupSharedMemory(MessageQueue *queue);
+dispatch_semaphore_t *initSharedMemorySem(int key);
 
-void messageProducer(MessageQueue *queue);
+void cleanupSharedMemory(MessageQueue *queue, dispatch_semaphore_t *sem_prod, dispatch_semaphore_t *sem_con);
 
-void messageConsumer(MessageQueue *queue);
+void messageProducer(MessageQueue *queue, dispatch_semaphore_t *sem);
+
+void messageConsumer(MessageQueue *queue, dispatch_semaphore_t *sem);

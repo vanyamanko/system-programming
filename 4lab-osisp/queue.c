@@ -1,13 +1,5 @@
 #include "func.h"
 
-void initQueue(MessageQueue *queue) {
-    queue->head = 0;
-    queue->tail = 0;
-    queue->count_added = 0;
-    queue->count_extracted = 0;
-    pthread_mutex_init(&queue->mutex, NULL); 
-}
-
 void push(MessageQueue *queue, Message *message) {
     pthread_mutex_lock(&queue->mutex); 
     if ((queue->tail + 1) % MAX_QUEUE_SIZE == queue->head) {

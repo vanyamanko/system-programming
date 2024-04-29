@@ -1,7 +1,9 @@
 #include "func.h"
 
 int main(void) {
-    MessageQueue* queue = initSharedMemory();
+    MessageQueue* queue = initSharedMemoryQueue();
+    dispatch_semaphore_t *sem_prod = initSharedMemorySem(7777); 
+    dispatch_semaphore_t *sem_con = initSharedMemorySem(6666); 
 
     int arrProducer[512];
     static int producerCount = 0;
@@ -19,7 +21,7 @@ int main(void) {
             perror("fork");
             exit(EXIT_FAILURE);
             } else if (pid == 0) {
-                messageProducer(queue);
+                messageProducer(queue, sem_prod);
             } else {
                 arrProducer[producerCount] = pid;
                 producerCount++;
@@ -40,7 +42,7 @@ int main(void) {
             perror("fork");
             exit(EXIT_FAILURE);
             } else if (pid == 0) {
-                messageConsumer(queue);
+                messageConsumer(queue, sem_con);
             } else {
                 arrConsumer[consumerCount] = pid;
                 consumerCount++;
@@ -67,6 +69,6 @@ int main(void) {
             break;
         }
     }
-    cleanupSharedMemory(queue);
+    cleanupSharedMemory(queue, sem_prod, sem_con);
     return 0;
 }
