@@ -62,3 +62,7 @@ dkms.conf
 
 #program
 prog
+
+#vscode
+
+.vscode
