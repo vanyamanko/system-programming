@@ -1,9 +1,9 @@
 #include "func.h"
 
 int main(void) {
+    pthread_cond_init(&condvar, NULL);
     queueSize = START_QUEUE_SIZE;
     waitFlag = 0;
-    pthread_cond_init(&condvar, NULL);
      
     MessageQueue* queue = malloc(sizeof(MessageQueue));
     dispatch_semaphore_t sem_prod = dispatch_semaphore_create(MAX_SEM_COUNT);
@@ -72,6 +72,7 @@ int main(void) {
         }
         if(c == 'r') {
             waitFlag = 0;
+            pthread_cond_signal(&condvar); 
         }
     }
     free(queue);

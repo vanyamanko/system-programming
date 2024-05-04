@@ -17,8 +17,8 @@ void messageProducer(MessageQueue *queue, dispatch_semaphore_t *sem) {
             break;
         }
         if(waitFlag) {
-            pthread_cond_init(&condvar, NULL);
-            pthread_mutex_t mutex; 
+            pthread_cond_t condvar = PTHREAD_COND_INITIALIZER;   
+            pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
             pthread_mutex_lock(&mutex);
             pthread_cond_wait(&condvar, &mutex); 
             printf("HELO\n");

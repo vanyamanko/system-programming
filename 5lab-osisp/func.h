@@ -19,8 +19,8 @@ int queueSize;
 int threadProdFlag;
 int threadConFlag;
 int waitFlag;
-pthread_cond_t condvar;
 
+pthread_cond_t condvar;
 typedef struct {
    u_int8_t type;
    u_int16_t hash;
