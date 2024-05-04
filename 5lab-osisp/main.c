@@ -2,6 +2,9 @@
 
 int main(void) {
     queueSize = START_QUEUE_SIZE;
+    waitFlag = 0;
+    pthread_cond_init(&condvar, NULL);
+     
     MessageQueue* queue = malloc(sizeof(MessageQueue));
     dispatch_semaphore_t sem_prod = dispatch_semaphore_create(MAX_SEM_COUNT);
     dispatch_semaphore_t sem_con = dispatch_semaphore_create(MAX_SEM_COUNT);
@@ -63,6 +66,12 @@ int main(void) {
                 pop(queue);
             }
             queueSize--;
+        }
+        if(c == 'w') {
+            waitFlag = 1;
+        }
+        if(c == 'r') {
+            waitFlag = 0;
         }
     }
     free(queue);
