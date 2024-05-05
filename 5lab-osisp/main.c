@@ -100,6 +100,8 @@ int main(void) {
         if(c == 'q') {
             threadProdFlag = 0;
             threadConFlag = 0;
+            pthread_cond_destroy(&condvar);
+            pthread_mutex_destroy(&mutex);
             break;
         }
         if(c == '+') {
