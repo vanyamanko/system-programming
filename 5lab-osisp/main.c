@@ -1,5 +1,49 @@
 #include "func.h"
 
+pthread_cond_t condvar = PTHREAD_COND_INITIALIZER;   
+pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+
+void messageProducer(MessageQueue *queue, dispatch_semaphore_t *sem) {
+    
+    while (1) {
+        if(waitFlag) {
+            pthread_mutex_lock(&mutex);
+            pthread_cond_wait(&condvar, &mutex); 
+            pthread_mutex_unlock(&mutex); 
+        }
+        dispatch_semaphore_wait(*sem, DISPATCH_TIME_FOREVER);
+        Message *new_message = (Message *)malloc(sizeof(Message));
+        if (new_message == NULL) {
+            perror("Error allocating memory for message");
+            exit(EXIT_FAILURE);
+        }
+        generateRandomMessage(new_message);
+        push(queue, new_message);
+        sleep(1);
+        dispatch_semaphore_signal(*sem);
+        if(!threadProdFlag) {
+            break;
+        }
+    }
+}
+
+void messageConsumer(MessageQueue *queue, dispatch_semaphore_t *sem) {
+    while (1) {
+        if(waitFlag) {
+            pthread_mutex_lock(&mutex);
+            pthread_cond_wait(&condvar, &mutex); 
+            pthread_mutex_unlock(&mutex); 
+        }
+        dispatch_semaphore_wait(*sem, DISPATCH_TIME_FOREVER);
+        pop(queue);
+        sleep(1);
+        dispatch_semaphore_signal(*sem);
+        if(!threadConFlag) {
+            break;
+        }
+    }
+}
+
 int main(void) {
     pthread_cond_init(&condvar, NULL);
     queueSize = START_QUEUE_SIZE;
@@ -72,7 +116,7 @@ int main(void) {
         }
         if(c == 'r') {
             waitFlag = 0;
-            pthread_cond_signal(&condvar); 
+            pthread_cond_broadcast(&condvar);
         }
     }
     free(queue);

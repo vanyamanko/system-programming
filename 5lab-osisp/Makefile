@@ -3,7 +3,7 @@ CFLAGS_COMMON = -std=c11 -pedantic -W -Wall -Wno-unused-parameter -Wno-unused-va
 CFLAGS_DEBUG = $(CFLAGS_COMMON) -g -ggdb
 CFLAGS_RELEASE = $(CFLAGS_COMMON) -Werror
 
-SRCS = main.c process.c queue.c thread.c
+SRCS = main.c queue.c thread.c
 OBJS = $(SRCS:.c=.o)
 EXEC = prog
 
