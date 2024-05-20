@@ -244,7 +244,7 @@ int main(int argc, char *argv[]) {
     int numChars = atoi(argv[1]);
 
     fillFileWithRandomChars(filename, numChars);
-    printf("file after sort:\n\n");
+    printf("file before sort:\n\n");
     system(command);
     pthread_t threads[atoi(argv[3])];
     for(int i = 0; i < atoi(argv[3]); i++) {
