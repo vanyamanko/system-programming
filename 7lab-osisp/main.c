@@ -60,22 +60,42 @@ void modification(int num) {
 }
 
 void list(void) {
-    
     for(int i = 0; i < NUMBER_OF_RECORDS; i++) {
-
+        off_t startPosition = i * 2; 
         lock.l_type = F_WRLCK;
-        lock.l_start = i * 2;
+        lock.l_start = startPosition;
         fcntl(fd, F_GETLK, &lock);
 
         printf("\n%d. ", i + 1);
-        if(i * 2 == lock.l_start && lock.l_type != F_UNLCK) {
+        if(startPosition == lock.l_start && lock.l_type != F_UNLCK) {
             printf("Sorry this record is being modified\n");
         } else {
-            lseek(fd, i * 2, SEEK_SET);
+            lseek(fd, startPosition, SEEK_SET);
             char record[2];
-            read(fd, record, 2);
-            printf("%s", record);
+            read(fd, record, 1);
+            printf("%s\n", record);
         }
+    }
+}
+
+void get(int num) {
+   if(num > NUMBER_OF_RECORDS || num < 1) {
+        printf("Incorrect input. Try again!\n");
+        return;
+    }
+    off_t startPosition = (num - 1) * 2; 
+    lock.l_type = F_WRLCK; 
+    lock.l_start = startPosition;
+    fcntl(fd, F_GETLK, &lock);
+    
+    printf("\n%d. ", num);
+    if(startPosition == lock.l_start && lock.l_type != F_UNLCK) {
+        printf("Sorry this record is being modified\n");
+    } else {
+        lseek(fd, startPosition, SEEK_SET);
+        char record[2];
+        read(fd, record, 1);
+        printf("%s\n", record);
     }
 }
 
@@ -109,14 +129,13 @@ int main(void) {
        list();
 	}
     if (strcmp(buff, "GET") == 0) {
-        // int num = atoi(number);
-        // get(num);
+        int num = atoi(number);
+        get(num);
     }
     if (strcmp(buff, "MOD") == 0) {
         int num = atoi(number);
         modification(num);
     }
 
-    system("cat data.txt");
     return 0;
 }
